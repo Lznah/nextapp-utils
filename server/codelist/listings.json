@@ -1,0 +1,273 @@
+{
+	"Titulek": {
+		"nextapp": {
+			"title": "Titulek",
+			"name": "advert_title"
+		},
+		"ebrana": {
+			"title": "Název",
+			"name": "name_en"
+		}
+	},
+	"Popis": {
+		"nextapp": {
+			"title": "Popis",
+			"name": "listing_description"
+		},
+		"ebrana": {
+			"title": "Popis",
+			"name": "description_en"
+		}
+	},
+	"Typ zakázky": {
+		"nextapp": {
+			"title": "Typ zakázky",
+			"name": "advert_type"
+		},
+		"ebrana": {
+			"title": "Typ akce",
+			"name": "id_cis_contracts_type"
+		},
+		"codes": {
+			"1": {
+				"in_ebrana": "1",
+				"nextapp": "Prodej",
+				"ebrana": "Prodej"
+			},
+			"2": {
+				"in_ebrana": "2",
+				"nextapp": "Pronájem",
+				"ebrana": "Pronájem"
+			}
+		}
+	},
+	"Typ nemovitosti": {
+		"nextapp": {
+			"title": "Typ nemovitosti",
+			"name": "listing_type"
+		},
+		"ebrana": {
+			"title": "Typ nemovitosti",
+			"name": "id_reality_type"
+		},
+		"codes": {
+			"4": {
+				"in_ebrana": "38",
+				"nextapp": "Byt",
+				"ebrana": "Jiné byty"
+			},
+			"6": {
+				"in_ebrana": "50",
+				"nextapp": "Dům nebo vila",
+				"ebrana": "Samostatné rodinné domy"
+			},
+			"10": {
+				"in_ebrana": "44",
+				"nextapp": "Chata nebo rekreační objekt",
+				"ebrana": "Jiné rekreační objekty"
+			},
+			"1": {
+				"in_ebrana": "62",
+				"nextapp": "Zemědělský objekt",
+				"ebrana": "Zemědělské usedlosti"
+			},
+			"3": {
+				"in_ebrana": "25",
+				"nextapp": "Pozemek",
+				"ebrana": "Ostatní pozemky"
+			},
+			"11": {
+				"in_ebrana": "48",
+				"nextapp": "Malý objekt nebo garáž",
+				"ebrana": "Malé objekty"
+			},
+			"2": {
+				"in_ebrana": "57",
+				"nextapp": "Komerční objekt nebo prostora",
+				"ebrana": "Ostatní"
+			},
+			"5": {
+				"in_ebrana": "5",
+				"nextapp": "Historický objekt",
+				"ebrana": "Historické objekty"
+			},
+			"7": {
+				"in_ebrana": "39",
+				"nextapp": "Hotel, penzion nebo restaurace",
+				"ebrana": "Hotely"
+			},
+			"8": {
+				"in_ebrana": "8",
+				"nextapp": "Nájemní dům",
+				"ebrana": "Činžovní dům"
+			}
+		}
+	},
+	"Typ smlouvy": {
+		"nextapp": {
+			"title": "Typ smlouvy",
+			"name": "advert_contract_type"
+		},
+		"ebrana": {
+			"title": "Exkluzivita",
+			"name": "id_cis_contracts_exclusive"
+		},
+		"codes": {
+			"1": {
+				"in_ebrana": "1",
+				"nextapp": "Exkluzivní",
+				"ebrana": "Jiné byty"
+			},
+			"2": {
+				"in_ebrana": "1",
+				"nextapp": "Co-Exkluzivní",
+				"ebrana": "Jiné byty"
+			},
+			"3": {
+				"in_ebrana": "2",
+				"nextapp": "Neexkluzivní",
+				"ebrana": "Jiné byty"
+			},
+			"4": {
+				"in_ebrana": "3",
+				"nextapp": "Bez smlouvy",
+				"ebrana": "Jiné byty"
+			}
+		}
+	},
+	"Makléř": {
+		"nextapp": {
+			"title": "Makléř",
+			"name": "nextapp-makler"
+		},
+		"ebrana": {
+			"title": "Makléř",
+			"name": "id_users"
+		}
+	},
+	"Cena": {
+		"nextapp": {
+			"title": "Cena",
+			"name": "advert_price"
+		},
+		"ebrana": {
+			"title": "Cena",
+			"name": "price"
+		}
+	},
+	"Měna": {
+		"nextapp": {
+			"title": "Měna",
+			"name": "advert_price_currency"
+		},
+		"ebrana": {
+			"title": "Měna",
+			"name": "id_cis_price_currency"
+		},
+		"codes": {
+			"1": {
+				"in_ebrana": "1",
+				"nextapp": "Kč",
+				"ebrana": "Kč"
+			},
+			"2": {
+				"in_ebrana": "2",
+				"nextapp": "EUR",
+				"ebrana": "Euro"
+			},
+			"3": {
+				"in_ebrana": "3",
+				"nextapp": "USD",
+				"ebrana": "Dolar"
+			}
+		}
+	},
+	"advert_price_unit": {
+		"nextapp": {
+			"title": "Jednotka ceny",
+			"name": "advert_price_unit"
+		},
+		"ebrana": {
+			"title": "Cena za",
+			"name": "id_cis_price_unit"
+		},
+		"codes": {
+			"1": {
+				"in_ebrana": "1",
+				"nextapp": "Za nemovitost",
+				"ebrana": "Za nemovitost"
+			},
+			"2": {
+				"in_ebrana": "2",
+				"nextapp": "Za měsíc",
+				"ebrana": "Za měsíc"
+			},
+			"3": {
+				"in_ebrana": "3",
+				"nextapp": "za m2",
+				"ebrana": "za m2"
+			},
+			"4": {
+				"in_ebrana": "4",
+				"nextapp": "za m2/měsíc",
+				"ebrana": "za m2/měsíc"
+			},
+			"5": {
+				"in_ebrana": "5",
+				"nextapp": "za m2/rok",
+				"ebrana": "za m2/rok"
+			},
+			"6": {
+				"in_ebrana": "6",
+				"nextapp": "za rok",
+				"ebrana": "za rok"
+			},
+			"7": {
+				"in_ebrana": "7",
+				"nextapp": "za den",
+				"ebrana": "za den"
+			}
+		}
+	},
+	"Poznámka k ceně": {
+		"nextapp": {
+			"title": "Poznámka k ceně",
+			"name": "advert_price_note"
+		},
+		"ebrana": {
+			"title": "Poznámka k ceně",
+			"name": "price_note_en"
+		}
+	},
+	"Cena k jednání": {
+		"nextapp": {
+			"title": "Cena k jednání",
+			"name": "advert_price_negotiation"
+		},
+		"ebrana": {
+			"title": "Cena k jednání",
+			"name": "ch_price_negotiation"
+		}
+
+	},
+	"Poplatky": {
+		"nextapp": {
+			"title": "Je ve složkách(Cena vč. provize, Cena vč. poplatků)",
+			"name": "listing_description"
+		},
+		"ebrana": {
+			"title": "Poznámka k ceně výběr",
+			"name": "id_cis_contracts_price_notes"
+		}
+	},
+	"Provize": {
+		"nextapp": {
+			"title": "Provize",
+			"name": "advert_comission_amount"
+		},
+		"ebrana": {
+			"title": "Provize",
+			"name": "price_commission"
+		}
+	}
+}
