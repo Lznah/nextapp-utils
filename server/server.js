@@ -12,6 +12,7 @@ var request = require('request').defaults({
 });
 const $ = require('cheerio');
 var {authenticate} = require('./middleware/authenticate');
+var Property = require('./models/property');
 var app = express();
 
 app.listen(3000, () => {
@@ -19,43 +20,55 @@ app.listen(3000, () => {
 });
 
 app.get('/properties/:id', authenticate, (req, res) => {
-
-  request({
-    url: 'https://nextapp.cz/search',
-    method: 'GET',
-    followAllRedirects: true,
-    qs: {
-      'search-input': req.params.id
+  var property = new Property(req.params.id);
+  property.run()
+  .then((json) => {
+    res.send(`${JSON.stringify(json)}`);
+  })
+  .catch((err) => {
+    if(typeof err.status !== "undefined") {
+      return res.status(err.status).send(`${JSON.stringify(err)}`);
     }
-  }, (error, response, body) => {
-    let pattern = /https:\/\/nextapp.cz\/listing\/([0-9]*)\/show/;
-    if( !pattern.test(response.request.uri.href) ) {
-      res.status(404).send({
-        text: 'Property not found'
-      });
-      return;
-    }
-    let trueID = response.request.uri.href.match(pattern)[1];
-    var inputArray = {};
-    request({
-      url: `https://nextapp.cz/listing/${trueID}/edit`,
-      method: 'GET'
-    }, (error, response, body) => {
-      let form = $('#listing', body);
-      //let inputs = $('input, textarea, select', form);
-      $('input, textarea, select', form).each(function(key, val) {
-        console.log($(this).attr('name'),': ',$(this).val());
-      });
-      res.send('hi');
-    });
+    res.status(400).send(`${JSON.stringify(err)}`);
   });
-});
-
-app.get('/aha', authenticate, (req, res) => {
-  request({
-    method: 'GET',
-    url: 'https://nextapp.cz/users'
-  }, (error, response, body) => {
-    res.send(body);
-  });
+  // request({
+  //   url: 'https://nextapp.cz/search',
+  //   method: 'GET',
+  //   followAllRedirects: true,
+  //   qs: {
+  //     'search-input': req.params.id
+  //   }
+  // }, (error, response, body) => {
+  //   let pattern = /https:\/\/nextapp.cz\/listing\/([0-9]*)\/show/;
+  //   if( !pattern.test(response.request.uri.href) ) {
+  //     res.status(404).send({
+  //       text: 'Property not found'
+  //     });
+  //     return;
+  //   }
+  //   let trueID = response.request.uri.href.match(pattern)[1];
+  //   var inputArray = {'basic-info': {}, 'broker': {}, 'price': {}};
+  //   Object.keys(inputArray).forEach((page) => {
+  //     request({
+  //       url: `https://nextapp.cz/listing/${trueID}/edit/${page}`,
+  //       method: 'GET'
+  //     }, (error, response, body) => {
+  //       console.log(response.statusCode, `https://nextapp.cz/listing/${trueID}/edit/${page}`);
+  //       if(error) {
+  //         console.log(error);
+  //         return;
+  //       }
+  //       if(response.statusCode != 200) {
+  //         console.log('Error: ', response.statusCode, `https://nextapp.cz/listing/${trueID}/edit/${page}`);
+  //         return;
+  //       }
+  //       let form = $('#listing', body);
+  //       $('input, textarea, select', form).each(function(key, val) {
+  //         inputArray[page][$(this).attr('name')] = $(this).val();
+  //       });
+  //       console.log(inputArray);
+  //     });
+  //   });
+  //   res.send('hi');
+  // });
 });
