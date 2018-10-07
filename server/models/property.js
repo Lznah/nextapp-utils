@@ -32,7 +32,6 @@ class Property{
         ];
         var array = await Promise.all(promises);
         let compoundObject = Object.assign(array[0], array[1], array[2]);
-        console.log(compoundObject);
         resolve(compoundObject);
       }).catch((status) => {
         reject(status);

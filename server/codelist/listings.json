@@ -125,12 +125,12 @@
 					"ebranaTitle": "aktuální"
 				},
 				"30": {
-					"in_ebrana": "2",
+					"in_ebrana": "30",
 					"nextappTitle": "Rezervace",
 					"ebranaTitle": "rezervace"
 				},
 				"40": {
-					"in_ebrana": "3",
+					"in_ebrana": "40",
 					"nextappTitle": "Realizováno",
 					"ebranaTitle": "prodáno"
 				},
@@ -273,16 +273,6 @@
 				"title": "Poznámka k ceně",
 				"name": "price_note_en"
 			}
-		},
-		"advert_price_negotiation": {
-			"nextapp": {
-				"title": "Cena k jednání",
-				"name": "advert_price_negotiation"
-			},
-			"ebrana": {
-				"title": "Cena k jednání",
-				"name": "advert_price_negotiation"
-			},
 		},
 		"advert_comission_amount": {
 			"nextapp": {
