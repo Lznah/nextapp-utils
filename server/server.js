@@ -14,6 +14,7 @@ const $ = require('cheerio');
 var {authenticate} = require('./middleware/authenticate');
 var Property = require('./models/property');
 var app = express();
+const port = process.env.PORT;
 
 app.listen(3000, () => {
   console.log("Server is running");
