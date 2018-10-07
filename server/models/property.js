@@ -72,8 +72,6 @@ class Property{
       this.downloadPropertyPage('broker')
       .then((html) => {
         let formHtml = $('#brokerCanvas', html);
-        console.log($(".fl li strong:contains('Vlastník:')", formHtml)
-                      .text());
         let inputs = {
           users_text: $(".fl li strong:contains('Vlastník:')", formHtml)
                         .parent()
@@ -143,7 +141,6 @@ class Property{
         } else {
           let trueID = response.request.uri.href.match(pattern)[1];
           this.trueID = trueID;
-          console.log(trueID);
           resolve(trueID);
         }
       });
