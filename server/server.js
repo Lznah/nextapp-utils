@@ -8,7 +8,6 @@ var request = require('request').defaults({
 });
 const $ = require('cheerio');
 var {authenticate} = require('./middleware/authenticate');
-var Property = require('./models/property');
 var app = express();
 const port = process.env.PORT || 8000;
 //

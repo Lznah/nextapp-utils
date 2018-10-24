@@ -1,12 +1,7 @@
 const fs = require("fs");
 const path = require('path');
 var request = require('request').defaults({
-  jar: true,
-  headers: {
-    agentOptions: {
-      ca: fs.readFileSync(process.env.NEXTAPP_CERTIFICATE)
-    }
-  }
+  jar: true
 });
 const $ = require('cheerio');
 
