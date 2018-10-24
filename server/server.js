@@ -14,10 +14,10 @@ const $ = require('cheerio');
 var {authenticate} = require('./middleware/authenticate');
 var Property = require('./models/property');
 var app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
-app.listen(port, () => {
-  console.log("Server is running");
+app.get('/', (req, res) => {
+  res.send("hi");
 });
 
 app.get('/properties/:id', authenticate, (req, res) => {
@@ -32,4 +32,8 @@ app.get('/properties/:id', authenticate, (req, res) => {
     }
     res.status(400).send(`${JSON.stringify(err)}`);
   });
+});
+
+app.listen(port, () => {
+  console.log("Server is running");
 });
