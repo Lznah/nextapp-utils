@@ -2,11 +2,12 @@
 
 const express = require("express");
 const fs = require("fs");
+const fs = require("path");
 var request = require('request').defaults({
   jar: true,
   headers: {
     agentOptions: {
-      ca: fs.readFileSync(process.env.NEXTAPP_CERTIFICATE)
+      ca: fs.readFileSync(path.join( __dirname, "process.env.NEXTAPP_CERTIFICATE" ))
     }
   }
 });
