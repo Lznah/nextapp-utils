@@ -273,16 +273,6 @@
 				"title": "Poznámka k ceně",
 				"name": "price_note_en"
 			}
-		},
-		"advert_comission_amount": {
-			"nextapp": {
-				"title": "Výše provize",
-				"name": "advert_comission_amount"
-			},
-			"ebrana": {
-				"title": "Provize",
-				"name": "price_commission"
-			}
 		}
 	}
 }
