@@ -3,7 +3,7 @@ var request = require('request').defaults({
   jar: true,
   headers: {
     agentOptions: {
-      ca: fs.readFileSync(process.env.NEXTAPP_CERTIFICATE)
+      ca: fs.readFileSync('/app/server/certs/nextappcz.cer')
     }
   }
 });
