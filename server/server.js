@@ -2,7 +2,7 @@
 
 const express = require("express");
 const fs = require("fs");
-const fs = require("path");
+const path = require("path");
 var request = require('request').defaults({
   jar: true,
   headers: {
