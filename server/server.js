@@ -4,12 +4,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require("path");
 var request = require('request').defaults({
-  jar: true,
-  headers: {
-    agentOptions: {
-      ca: fs.readFileSync('/app/server/certs/nextappcz.cer')
-    }
-  }
+  jar: true
 });
 const $ = require('cheerio');
 var {authenticate} = require('./middleware/authenticate');

@@ -1,11 +1,6 @@
 var fs = require('fs');
 var request = require('request').defaults({
-  jar: true,
-  headers: {
-    agentOptions: {
-      ca: fs.readFileSync('/app/server/certs/nextappcz.cer')
-    }
-  }
+  jar: true
 });
 const $ = require('cheerio');
 
