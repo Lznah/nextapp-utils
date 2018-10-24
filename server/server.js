@@ -1,18 +1,18 @@
 //require('./config/config');
 
 const express = require("express");
-// const fs = require("fs");
-// var request = require('request').defaults({
-//   jar: true,
-//   headers: {
-//     agentOptions: {
-//       ca: fs.readFileSync(process.env.NEXTAPP_CERTIFICATE)
-//     }
-//   }
-// });
-// const $ = require('cheerio');
-// var {authenticate} = require('./middleware/authenticate');
-// var Property = require('./models/property');
+const fs = require("fs");
+var request = require('request').defaults({
+  jar: true,
+  headers: {
+    agentOptions: {
+      ca: fs.readFileSync(process.env.NEXTAPP_CERTIFICATE)
+    }
+  }
+});
+const $ = require('cheerio');
+var {authenticate} = require('./middleware/authenticate');
+var Property = require('./models/property');
 var app = express();
 const port = process.env.PORT || 8000;
 //
