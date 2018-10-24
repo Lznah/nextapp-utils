@@ -7,7 +7,7 @@ var request = require('request').defaults({
   jar: true,
   headers: {
     agentOptions: {
-      ca: fs.readFileSync(path.join( __dirname, process.env.NEXTAPP_CERTIFICATE ))
+      ca: fs.readFileSync(path.join( __dirname, 'certs', 'nextappcz.cer' ))
     }
   }
 });
