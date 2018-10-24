@@ -1,3 +1,4 @@
+const path = require('path');
 var fs = require('fs');
 var request = require('request').defaults({
   jar: true,
