@@ -3,6 +3,7 @@ require('./config/config');
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 var request = require('request').defaults({
   jar: true,
   headers: {
@@ -16,6 +17,7 @@ var {authenticate} = require('./middleware/authenticate');
 var Property = require('./models/property');
 var app = express();
 const port = process.env.PORT || 8000;
+app.use(cors({origin: '*'}));
 
 app.get('/properties/:id', authenticate, (req, res) => {
   var property = new Property(req.params.id);
