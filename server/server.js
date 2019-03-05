@@ -140,10 +140,10 @@ app.get('/scrapeExports/pobocky', (req, res) => {
   }
   lock.lock = true;
   lock.progress = 0;
-  exportJobId = "Stahování informací o pobočkách";
+  exportJobId = "Stahování informací o partnerech";
+  res.end();
   authenticate2(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
   .then(() => {
-    res.end();
     return ExportQueueItem.scrapeAndSave(lock);
   })
   .then((idOfMeasuring) => {
@@ -151,7 +151,7 @@ app.get('/scrapeExports/pobocky', (req, res) => {
   })
   .catch((err) => {
     lock.lock = false;
-    res.status(500).send(err);
+    console.log(err);
   });
 });
 
@@ -162,20 +162,17 @@ app.get('/scrapeExports/partneri', authenticate, (req, res) => {
   lock.lock = true;
   lock.progress = 0;
   exportJobId = "Stahování informací o partnerech";
-  console.log("a");
+  res.end();
   authenticate2(process.env.NEXTAPP_USERNAME, process.env.NEXTAPP_PASSWORD)
   .then(() => {
-    console.log("b");
     return ExportQueueItem.scrapeAndSave(lock);
   })
   .then((idOfMeasuring) => {
-    console.log("c");
     lock.lock = false;
   })
   .catch((err) => {
     lock.lock = false;
     console.log(err);
-    res.status(500).send(err);
   });
 });
 
