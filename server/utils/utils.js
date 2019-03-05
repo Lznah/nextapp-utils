@@ -13,17 +13,66 @@ var request = require('request').defaults({
 
 const cheerio = require("cheerio");
 
-module.exports.loadTable = async (url, columns, idColumn) => {
+module.exports.sendForm = (url, formData) => {
+  return new Promise((resolve, reject) => {
+    request({
+      url: url,
+      method: 'POST',
+      form: formData
+    }, (error, response, html) => {
+      if(error) {
+        return reject({
+          status: 500,
+          text: `Could send export page.`
+        });
+      }
+      if(response.statusCode != 302) {
+        return reject({
+          status: 500,
+          text: `Server responded with unsupported status code: ${response.statusCode}`
+        });
+      }
+      resolve();
+    });
+  });
+}
+
+module.exports.loadExportPage = (record) => {
+  return new Promise( (resolve, reject) => {
+    request({
+      url: "https://nextapp.cz/listing/"+record.realID+"/edit/exports",
+      method: 'GET',
+    }, (error, response, html) => {
+      if(error) {
+        return reject({
+          status: 500,
+          text: `Could not download page: ${pageName} Error: ${error}`
+        });
+      }
+      if(response.statusCode != 200) {
+        return reject({
+          status: 500,
+          text: `Server responded with unsupported status code: ${response.statusCode}`
+        });
+      }
+      resolve(cheerio.load(html));
+    });
+  });
+}
+
+module.exports.loadTable = async (url, columns, idColumn, obj) => {
   return new Promise( async (resolve, reject) => {
     try{
       var $ = await loadPage(url+"&page="+1);
       const pageCount = getNumberOfPages($);
+      if(pageCount == 0) reject("No records");
       var data = getTable($, columns, idColumn);
+      obj.progress = Math.round(100/pageCount);
       for(var i=2; i<=pageCount; i++) {
         var $ = await loadPage(url+"&page="+i);
-        console.log(i);
         var table = getTable($, columns, idColumn);
         data["rows"] = [...data["rows"], ...table["rows"]];
+        obj.progress = Math.round(100*i/pageCount);
       }
       resolve(data);
     } catch (error) {
@@ -39,13 +88,13 @@ var loadPage = async (url) => {
       method: 'GET'
     }, (error, response, html) => {
       if(error) {
-        reject({
+        return reject({
           status: 500,
           text: `Could not download page: ${pageName} Error: ${error}`
         });
       }
       if(response.statusCode != 200) {
-        reject({
+        return reject({
           status: 500,
           text: `Server responded with unsupported status code: ${response.statusCode}`
         });
@@ -54,28 +103,6 @@ var loadPage = async (url) => {
     });
   });
 }
-
-// module.exports.loadPageAsync = (url, counter, callback) => {
-//   if(counter == 0) return;
-//   request({
-//     url: url,
-//     method: 'GET'
-//   }, (error, response, html) => {
-//     // if(error) {
-//     //   reject({
-//     //     status: 500,
-//     //     text: `Could not download page: ${pageName} Error: ${error}`
-//     //   });
-//     // }
-//     // if(response.statusCode != 200) {
-//     //   reject({
-//     //     status: 500,
-//     //     text: `Server responded with unsupported status code: ${response.statusCode}`
-//     //   });
-//     // }
-//     callback(cheerio.load(html));
-//   });
-// }
 
 var getNumberOfPages = ($) => {
   var span = $("#inpage .pager-vypis span").not(".padding-right");

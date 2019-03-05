@@ -32,7 +32,7 @@ function authenticate(req, res, next) {
       if( authenticate.attempts <= 0) {
         authenticate.attempts = 3;
         res.status(401).send({
-          text: 'Can not log in'
+          message: 'Can not log in'
         });
         return;
       }
@@ -44,69 +44,39 @@ function authenticate(req, res, next) {
   });
 }
 
-function authenticate2(req, res, next) {
-  if(typeof authenticate2.attempts === 'undefined') {
-    authenticate2.attempts = 3;
-  }
-  request({
-    method: 'POST',
-    url: 'https://nextapp.cz/login-check',
-    followAllRedirects: true,
-    formData: {
-      user_login: process.env.NEXTAPP_USERNAME2,
-      user_password: process.env.NEXTAPP_PASSWORD2,
-      login_submit: 'Přihlásit se!'
-    }
-  }, function(error, response, body) {
-    if(error) {
-      throw error;
-    }
-    if( $('title', body).text() === 'Přihlášení / NEXTapp' || response.statusCode !== 200 ) {
-      if( authenticate2.attempts <= 0) {
-        authenticate2.attempts = 3;
-        res.status(401).send({
-          text: 'Can not log in2'
-        });
-        return;
+async function login(username, password) {
+  return new Promise((resolve, reject) => {
+    request({
+      method: 'POST',
+      url: 'https://nextapp.cz/login-check',
+      followAllRedirects: true,
+      formData: {
+        user_login: username,
+        user_password: password,
+        login_submit: 'Přihlásit se!'
       }
-      authenticate2.attempts--;
-      authenticate2(req, res, next);
-      return;
-    }
-    next();
+    }, function(error, response, body) {
+      if(error) {
+        return reject(error);
+      }
+      if( $('title', body).text() === 'Přihlášení / NEXTapp' || response.statusCode !== 200 ) {
+        return resolve(false);
+      } else {
+        return resolve(true);
+      }
+    });
   });
 }
 
-function authenticate2(req, res, next) {
-  if(typeof authenticate2.attempts === 'undefined') {
-    authenticate2.attempts = 3;
-  }
-  request({
-    method: 'POST',
-    url: 'https://nextapp.cz/login-check',
-    followAllRedirects: true,
-    formData: {
-      user_login: process.env.NEXTAPP_USERNAME2,
-      user_password: process.env.NEXTAPP_PASSWORD2,
-      login_submit: 'Přihlásit se!'
-    }
-  }, function(error, response, body) {
-    if(error) {
-      throw error;
-    }
-    if( $('title', body).text() === 'Přihlášení / NEXTapp' || response.statusCode !== 200 ) {
-      if( authenticate2.attempts <= 0) {
-        authenticate2.attempts = 3;
-        res.status(401).send({
-          text: 'Can not log in2'
-        });
-        return;
-      }
-      authenticate2.attempts--;
-      authenticate2(req, res, next);
-      return;
-    }
-    next();
+async function authenticate2(username, password) {
+  return new Promise(async (resolve, reject) => {
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    reject();
   });
 }
 
