@@ -90,7 +90,7 @@ var loadPage = async (url) => {
       if(error) {
         return reject({
           status: 500,
-          text: `Could not download page: ${pageName} Error: ${error}`
+          text: `Could not download page: ${url} Error: ${error}`
         });
       }
       if(response.statusCode != 200) {
