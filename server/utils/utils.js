@@ -13,6 +13,43 @@ var request = require('request').defaults({
 
 const cheerio = require("cheerio");
 
+async function login(username, password) {
+  return new Promise((resolve, reject) => {
+    request({
+      method: 'POST',
+      url: 'https://nextapp.cz/login-check',
+      followAllRedirects: true,
+      formData: {
+        user_login: username,
+        user_password: password,
+        login_submit: 'Přihlásit se!'
+      }
+    }, function(error, response, body) {
+      if(error) {
+        return reject(error);
+      }
+      if( $('title', body).text() === 'Přihlášení / NEXTapp' || response.statusCode !== 200 ) {
+        return resolve(false);
+      } else {
+        return resolve(true);
+      }
+    });
+  });
+}
+
+module.exports.authenticate = (username, password) => {
+  return new Promise(async (resolve, reject) => {
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    var logged = await login(username, password);
+    if(logged) return resolve();
+    reject();
+  });
+}
+
+
 module.exports.sendForm = (url, formData) => {
   return new Promise((resolve, reject) => {
     request({

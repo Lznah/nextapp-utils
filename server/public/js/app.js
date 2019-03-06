@@ -119,6 +119,7 @@ function progressbar() {
     "url": "/scrapeExports/lock"
   })
   .done(function(res) {
+    console.log(res);
     var html;
     if(res.lock) {
       html = '<div class="progress"><div class="progress-bar" role="progressbar" style="width: '+res.progress+'%;">'+res.progress+' %</div></div>';

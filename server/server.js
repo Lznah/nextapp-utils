@@ -21,10 +21,8 @@ var request = require('request').defaults({
     }
   }
 });
-var {authenticate, authenticate2} = require('./middleware/authenticate');
 var Property = require('./models/property');
 
-//app.set('view engine', 'hbs');
 const port = process.env.PORT || 8000;
 const serverLogPath = path.join(__dirname,'server.log')
 
@@ -59,9 +57,12 @@ app.use(cors({origin: '*'}));
 var lock = {lock: false, progress: 0};
 var exportJobId;
 
-app.get('/properties/:id', authenticate, (req, res) => {
-  var property = new Property(req.params.id);
-  property.run()
+app.get('/properties/:id', (req, res) => {
+  nextapp.authenticate(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
+  .then(() => {
+    var property = new Property(req.params.id);
+    return property.run()
+  })
   .then((json) => {
     res.send(`${JSON.stringify(json)}`);
   })
@@ -82,9 +83,9 @@ app.get("/reexport/:id", (req, res) => {
   }
   lock.lock = true;
   exportJobId = req.params.id;
-  authenticate2(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
+  nextapp.authenticate(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
   .then(() => {
-    res.send("OK");
+    res.send("Logged");
     return ExportQueueItem.listById(req.params.id);
   })
   .then((records) => {
@@ -92,12 +93,14 @@ app.get("/reexport/:id", (req, res) => {
   })
   .then(() => {
     lock.lock = false;
+    lock.progress = 0;
     exportJobId = false;
   })
   .catch((error) => {
     exportJobId = false;
     lock.lock = false;
-    res.status(500).send(error)
+    lock.progress = 0;
+    console.log(error);
   })
 });
 
@@ -134,44 +137,31 @@ app.get('/scrapeExports/lock', (req, res) => {
   res.send(lock);
 });
 
-app.get('/scrapeExports/pobocky', (req, res) => {
+app.get('/scrapeExports/:type', (req, res) => {
   if(lock.lock) {
     return res.status(500).send("Another job ("+exportJobId+") is running");
   }
   lock.lock = true;
   lock.progress = 0;
   exportJobId = "Stahování informací o partnerech";
-  res.end();
-  authenticate2(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
-  .then(() => {
-    return ExportQueueItem.scrapeAndSave(lock);
-  })
-  .then((idOfMeasuring) => {
-    lock.lock = false;
-  })
-  .catch((err) => {
-    lock.lock = false;
-    console.log(err);
-  });
-});
-
-app.get('/scrapeExports/partneri', authenticate, (req, res) => {
-  if(lock.lock) {
-    return res.status(500).send("Another job ("+exportJobId+") is running");
+  var username = process.env.NEXTAPP_USERNAME;
+  var password = process.env.NEXTAPP_PASSWORD;
+  if(req.params.type == "pobocky") {
+    username = process.env.NEXTAPP_USERNAME2;
+    password = process.env.NEXTAPP_PASSWORD2;
   }
-  lock.lock = true;
-  lock.progress = 0;
-  exportJobId = "Stahování informací o partnerech";
-  res.end();
-  authenticate2(process.env.NEXTAPP_USERNAME, process.env.NEXTAPP_PASSWORD)
+  nextapp.authenticate(username, password)
   .then(() => {
+    res.send("Logged");
     return ExportQueueItem.scrapeAndSave(lock);
   })
   .then((idOfMeasuring) => {
     lock.lock = false;
+    lock.progress = 0;
   })
   .catch((err) => {
     lock.lock = false;
+    lock.progress = 0;
     console.log(err);
   });
 });
