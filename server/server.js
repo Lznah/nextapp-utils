@@ -78,7 +78,7 @@ function notifyMe(message, text = "") {
   });
 }
 
-new CronJob('0 * * * * *', function() {
+new CronJob('0 1 * * * *', function() {
   rp('http://nextimmo.cz/irest-exporty/api.php')
     .then( (html) => {
       try{
