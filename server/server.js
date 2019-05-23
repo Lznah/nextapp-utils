@@ -9,6 +9,8 @@ const $ = require("cheerio");
 const exphbs = require('express-handlebars');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
+const rp = require('request-promise');
+const nodemailer = require('nodemailer');
 
 const nextapp = require("./utils/utils.js");
 var {mongoose} = require("./db/mongoose");
@@ -21,6 +23,7 @@ var request = require('request').defaults({
     }
   }
 });
+var CronJob = require('cron').CronJob;
 var Property = require('./models/property');
 
 const port = process.env.PORT || 8000;
@@ -56,6 +59,68 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(cors({origin: '*'}));
 var lock = {lock: false, progress: 0};
 var exportJobId;
+
+function notifyMe(message, text = "") {
+  let transporter = nodemailer.createTransport({
+    sendmail: true,
+    newline: 'unix',
+    path: '/usr/sbin/sendmail'
+  });
+  transporter.sendMail({
+    from: 'util@nextreality.cz',
+    to: 'petr.hanzl@nextreality.cz, hanzlpe@icloud.com',
+    subject: 'Error: '+message,
+    text: text
+  }, (err) => {
+    if(err) {
+      console.log(err);
+    }
+  });
+}
+
+new CronJob('0 * * * * *', function() {
+  rp('http://nextimmo.cz/irest-exporty/api.php')
+    .then( (html) => {
+      try{
+        let data = JSON.parse(html);
+        let y = new Date(); // yesterday
+        y.setDate(y.getDate()-1);
+
+        let dby = new Date(); // dayBeforeYesterday
+        dby.setDate(dby.getDate()-2);
+
+        yString = y.toISOString().replace(/T[0-9:.]*Z/,''); // in format YYYY-mm-dd
+        dbyString = dby.toISOString().replace(/T[0-9:.]*Z/,'');
+        if( _.isUndefined(data[yString]) || _.isUndefined(data[dbyString])) {
+          throw 'data were not measured';
+        }
+
+        var sub = [];
+        var text = "problems with: ";
+        var flag = false;
+        _.forOwn(data[yString],(val, key) => {
+          sub[key] = val;
+        });
+        _.forOwn(data[dbyString],(val, key) => {
+          sub[key] = Math.abs(sub[key]-val)/sub[key];
+          if(sub[key] > 0.25) {
+            text += (flag?', ':'');
+            text += key;
+            flag = true;
+          }
+        });
+        if(flag) {
+          throw text;
+        }
+        return;
+      } catch(err) {
+        return Promise.reject(err);
+      };
+    })
+    .catch( (err) => {
+      notifyMe("statistiky NEXT IMMO", err);
+    });
+}, null, true, 'Europe/Prague');
 
 app.get('/properties/:id', (req, res) => {
   nextapp.authenticate(process.env.NEXTAPP_USERNAME2, process.env.NEXTAPP_PASSWORD2)
