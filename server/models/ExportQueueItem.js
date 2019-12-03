@@ -63,7 +63,6 @@ var startjob = async(record, servers, export_action) => {
     for(var i=0; i<servers.length; i++) {
       var index = record.servers.findIndex((element) => element.id == servers[i]);
       if(record.servers[index].export) {
-        console.log(i, servers);
         if( !flag && serversWithAdditionalInfo.find((element) => element == servers[i]) ) flag = true;
         formData[servers[i]] = {export_actions: export_action};
       }
