@@ -1,9 +1,9 @@
 var list = $("#list table tbody");
 var modalServers = $("#modalServers");
-var reexport_controls = $("#reexport_controls");
-var reexport_id = $("#reexport_id")
+var startjob_controls = $("#startjob_controls");
+var startjob = $("#startjob");
 
-list.on("click", ".reexport", function() {
+list.on("click", ".startjob", function() {
   var id = $(this).attr("data-id");
   $.ajax({
     "method": "GET",
@@ -17,9 +17,9 @@ list.on("click", ".reexport", function() {
       output += '<label class="form-check-label" for="server-'+server._id+'">'+server.name+' ('+server.count+')'+'</label>';
       output += '</div>';
     });
-    reexport_id.val(id);
+    startjob.val(id);
     modalServers.html(output);
-    $("#reexportModal").modal({"show": true});
+    $("#startJobModal").modal({"show": true});
   })
   .fail(function(error) {
     alert(error.responseText);
@@ -46,14 +46,20 @@ list.on("click", ".smazat", function() {
   });
 });
 
-reexport_controls.on('click', '#newScrapePobocky', function() {
+startjob_controls.on('change', "#customFilter", function() {
+  $(this).val( decodeURIComponent($(this).val()) ); 
+});
+
+startjob_controls.on('click', '#newScrapePobocky', function() {
   var newScrapePobocky = $("#newScrapePobocky");
   var newScrapePartneri = $("#newScrapePartneri");
+  var customFilter = $("#customFilter").val();
   newScrapePartneri.prop("disabled", true);
   newScrapePobocky.prop("disabled", true);
   $.ajax({
-    "method": "GET",
-    "url": "/scrapeExports/pobocky"
+    "method": "POST",
+    "url": "/scrapeExports/pobocky",
+    "data": { "customFilter": customFilter}
   })
   .done(function(data) {
     progressbar();
@@ -69,14 +75,16 @@ reexport_controls.on('click', '#newScrapePobocky', function() {
   })
 });
 
-reexport_controls.on('click', '#newScrapePartneri', function() {
+startjob_controls.on('click', '#newScrapePartneri', function() {
   var newScrapePobocky = $("#newScrapePobocky");
   var newScrapePartneri = $("#newScrapePartneri");
+  var customFilter = $("#customFilter").val();
   newScrapePartneri.prop("disabled", true);
   newScrapePobocky.prop("disabled", true);
   $.ajax({
-    "method": "GET",
-    "url": "/scrapeExports/partneri"
+    "method": "POST",
+    "url": "/scrapeExports/partneri",
+    "data": { "customFilter": customFilter}
   })
   .done(function(data) {
     progressbar();
@@ -103,7 +111,7 @@ function updateList() {
       output += '<td class="text-center" scope="row">'+val._id+'</td>';
       output += '<td>'+val.date+'</td>';
       output += '<td class="text-center">'+val.count+'</td>';
-      output += '<td class="text-right"><button class="btn btn-primary btn-sm reexport" data-id="'+val._id+'">Reexport</button> <button class="btn btn-danger btn-sm smazat" data-id="'+val._id+'">&times;</button></td>';
+      output += '<td class="text-right"><button class="btn btn-primary btn-sm startjob" data-id="'+val._id+'">Akce</button> <button class="btn btn-danger btn-sm smazat" data-id="'+val._id+'">&times;</button></td>';
       output += '</tr>'
     });
     list.html(output);
@@ -125,21 +133,25 @@ function progressbar() {
       html = '<div class="progress"><div class="progress-bar" role="progressbar" style="width: '+res.progress+'%;">'+res.progress+' %</div></div>';
       progress.on();
     } else {
-      html = '<button type="button" class="btn btn-primary" id="newScrapePobocky">Pobočky</button> <button type="button" class="btn btn-primary" id="newScrapePartneri">Partnery</button>';
+      html = '<div class="input-group"><input type="text" class="form-control" placeholder="Zadejte svůj libovolný filtr a zvolte druh přihlášení ..." id="customFilter"><div class="input-group-append" id="button-addon4"><button type="button" class="btn btn-primary" id="newScrapePobocky">Pobočky</button> <button type="button" class="btn btn-primary" id="newScrapePartneri">Partnery</button></div></div>';
       updateList();
       progress.off();
     }
-    reexport_controls.html(html);
+    startjob_controls.html(html);
   })
   .fail(function(error) {
     alert(JSON.stringify(error));
   });
 }
 
-reexport_id.click(function() {
-  $("#reexportModal").modal('hide');
+startjob.click(function() {
+  if($("#export_action").val() == "none") {
+    return alert("Vyber akci");
+  }
+  $("#startJobModal").modal('hide');
   var newScrapePobocky = $("#newScrapePobocky");
   var newScrapePartneri = $("#newScrapePartneri");
+  var export_action = $("#export_action").val();
   newScrapePartneri.prop("disabled", true);
   newScrapePobocky.prop("disabled", true);
   var formData = [];
@@ -147,9 +159,9 @@ reexport_id.click(function() {
     formData.push($(this).attr("value"));
   });
   $.ajax({
-    "method": "GET",
-    "url": "/reexport/"+reexport_id.val(),
-    "data": {servers: formData}
+    "method": "POST",
+    "url": "/startjob/"+startjob.val(),
+    "data": {"servers": formData, "export_action": export_action}
   })
   .done(function(data) {
     progressbar();

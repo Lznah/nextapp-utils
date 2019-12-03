@@ -1,124 +1,35 @@
 {
-  "servers": [
-    {
-			"name": "annonce.cz",
-			"id": 550
-		},
-    {
-			"name": "ceskereality.cz",
-			"id": 50
-		},
-    {
-			"name": "Hyperreality",
-			"id": 120
-		},
-    {
-			"name": "Realhit.cz",
-			"id": 255
-		},
-    {
-			"name": "Realingo.cz",
-			"id": 620
-		},
-    {
-			"name": "reality.cz",
-			"id": 30
-		},
-    {
-			"name": "realitycechy.cz / morava.cz",
-			"id": 110
-		},
-    {
-			"name": "Viareality",
-			"id": 261
-		},
-    {
-			"name": "WWW stránky",
-			"id": 1
-		},
-    {
-			"name": "avizo.cz",
-			"id": 350
-		},
-    {
-			"name": "Byty.cz",
-			"id": 570
-		},
-    {
-			"name": "domybytypozemky.cz",
-			"id": 560
-		},
-    {
-			"name": "eurobydlení.cz",
-			"id": 160
-		},
-    {
-			"name": "Grandreality",
-			"id": 280
-		},
-    {
-			"name": "inzercerealit.com",
-			"id": 240
-		},
-    {
-			"name": "jihoceskenemovitosti.cz",
-			"id": 270
-		},
-    {
-			"name": "living.sk",
-			"id": 3002
-		},
-    {
-			"name": "prazskereality.cz",
-			"id": 170
-		},
-    {
-			"name": "realcity",
-			"id": 150
-		},
-    {
-			"name": "Realitniprostor.cz",
-			"id": 600
-		},
-    {
-			"name": "reality.idnes.cz",
-			"id": 250
-		},
-    {
-			"name": "reality.sk",
-			"id": 180
-		},
-    {
-			"name": "Realitymix.cz",
-			"id": 10
-		},
-    {
-			"name": "Realitymix.sk",
-			"id": 11
-		},
-    {
-			"name": "realitypro.eu",
-			"id": 220
-		},
-    {
-			"name": "sreality.cz",
-			"id": 20
-		},
-    {
-			"name": "topreality.cz",
-			"id": 580
-		},
-    {
-			"name": "topreality.sk",
-			"id": 3001
-		},
-    {
-			"name": "UlovDomov.cz",
-			"id": 610
-		},
-    {
-			"name": "wikireality.cz",
-			"id": 400
-		}
-  ]
+  "servers": { 
+	"annonce.cz": 550,
+	"ceskereality.cz": 50,
+	"Hyperreality": 120,
+	"Realhit.cz": 255,
+	"Realingo.cz": 620,
+	"reality.cz": 30,
+	"realitycechy.cz / morava.cz": 110,
+	"Viareality": 261,
+	"WWW stránky": 1,
+	"avizo.cz": 350,
+	"Byty.cz": 570,
+	"domybytypozemky.cz": 560,
+	"eurobydlení.cz": 160,
+	"Grandreality": 280,
+	"inzercerealit.com": 240,
+	"jihoceskenemovitosti.cz": 270,
+	"living.sk": 3002,
+	"prazskereality.cz": 170,
+	"realcity": 150,
+	"Realitniprostor.cz": 600,
+	"reality.idnes.cz": 250,
+	"reality.sk": 180,
+	"Realitymix.cz": 10,
+	"Realitymix.sk": 11,
+	"realitypro.eu": 220,
+	"sreality.cz": 20,
+	"topreality.cz": 580,
+	"topreality.sk": 3001,
+	"UlovDomov.cz": 610,
+	"wikireality.cz": 400,
+	"Cincink.cz": 640
+  }
 }

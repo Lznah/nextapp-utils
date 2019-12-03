@@ -23,12 +23,12 @@
 <div class="row">
   <div class="col-md-8 offset-md-2">
     <h2>Stáhnout informace o exportech pro:</h2>
-    <div id="reexport_controls">
+    <div id="startjob_controls">
 
     </div>
   </div>
 </div>
-<div class="modal fade" id="reexportModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="startJobModal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -41,16 +41,17 @@
         <button type="button" class="btn btn-primary btn-sm" id="invertovat">Invertovat výběr</button>
         <div id="modalServers">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" checked="checked" value="550" id="annonce">
-            <label class="form-check-label" for="annonce">
-              annonce.cz
-            </label>
+
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" checked="checked" data-dismiss="modal">Zavřít</button>
-        <button id="reexport_id" type="button" class="btn btn-primary" value="">Reexportovat</button>
+        <select id="export_action" class="form-control">
+          <option value="none" selected="selected">-- vyberte akci</option>
+          <option value="10">Reexport</option>
+          <option value="20">Smazat</option>
+        </select>
+        <button id="startjob" type="button" class="btn btn-primary" value=>Provést</button>
       </div>
     </div>
   </div>

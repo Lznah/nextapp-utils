@@ -139,12 +139,15 @@ app.get('/properties/:id', (req, res) => {
   });
 });
 
-app.get("/reexport/:id", (req, res) => {
+app.post("/startjob/:id", (req, res) => {
   if(lock.lock) {
     return res.status(500).send("Another job ("+exportJobId+") is running");
   }
-  if(typeof req.query.servers != "object" || req.query.servers.length == 0) {
+  if(typeof req.body.servers != "object" || req.body.servers.length == 0) {
     return res.status(500).send("No server selected");
+  }
+  if(typeof req.body.export_action == undefined) {
+    return res.status(500).send("No export action selected");
   }
   lock.lock = true;
   exportJobId = req.params.id;
@@ -154,7 +157,7 @@ app.get("/reexport/:id", (req, res) => {
     return ExportQueueItem.listById(req.params.id);
   })
   .then((records) => {
-    return ExportQueueItem.reexportAll(records, req.query.servers, lock);
+    return ExportQueueItem.startjobAll(records, req.body.servers, req.body.export_action, lock);
   })
   .then(() => {
     lock.lock = false;
@@ -202,7 +205,7 @@ app.get('/scrapeExports/lock', (req, res) => {
   res.send(lock);
 });
 
-app.get('/scrapeExports/:type', (req, res) => {
+app.post('/scrapeExports/:type', (req, res) => {
   if(lock.lock) {
     return res.status(500).send("Another job ("+exportJobId+") is running");
   }
@@ -212,13 +215,14 @@ app.get('/scrapeExports/:type', (req, res) => {
   var username = process.env.NEXTAPP_USERNAME;
   var password = process.env.NEXTAPP_PASSWORD;
   if(req.params.type == "pobocky") {
+    exportJobId = "Stahování informací o pobočkách";
     username = process.env.NEXTAPP_USERNAME2;
     password = process.env.NEXTAPP_PASSWORD2;
   }
   nextapp.authenticate(username, password)
   .then(() => {
     res.send("Logged");
-    return ExportQueueItem.scrapeAndSave(lock);
+    return ExportQueueItem.scrapeAndSave(lock, req.body.customFilter);
   })
   .then((idOfMeasuring) => {
     lock.lock = false;

@@ -146,7 +146,7 @@ var getNumberOfPages = ($) => {
   if(span.length == 1) {
     return span.text().replace("z ","")
   } else {
-    return 0;
+    return 1;
   }
 }
 
@@ -175,7 +175,7 @@ var getTable = ($, whichColumns, idColumn) => {
         data["rows"][indexRow]["fakeID"] = $(link).text().trim();
         data["rows"][indexRow]["realID"] = $(link).attr("href").match(/\/listing\/([0-9]*)\/edit/)[1];
       } else {
-        data["rows"][indexRow][columnName] = func(indexCell, cell);
+        data["rows"][indexRow][columnName] = func(columnName, cell);
       }
     });
   });

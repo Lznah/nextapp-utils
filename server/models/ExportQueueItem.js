@@ -4,6 +4,7 @@ var $ = require("cheerio");
 var fs = require("fs");
 var path = require("path");
 var nextapp = require("../utils/utils");
+var qs = require('qs');
 
 var ExportQueueItemSchema = new mongoose.Schema({
   idOfMeasuring: {
@@ -54,7 +55,7 @@ var ExportQueueItemSchema = new mongoose.Schema({
 
 var ExportQueueItem = mongoose.model('ExportQueueItem', ExportQueueItemSchema);
 
-var reexport = async(record, servers) => {
+var startjob = async(record, servers, export_action) => {
   return new Promise( async (resolve, reject) => {
     var formData = [];
     var flag = false;
@@ -62,8 +63,9 @@ var reexport = async(record, servers) => {
     for(var i=0; i<servers.length; i++) {
       var index = record.servers.findIndex((element) => element.id == servers[i]);
       if(record.servers[index].export) {
+        console.log(i, servers);
         if( !flag && serversWithAdditionalInfo.find((element) => element == servers[i]) ) flag = true;
-        formData[servers[i]] = {export_actions: 10};
+        formData[servers[i]] = {export_actions: export_action};
       }
     }
     if(flag) {
@@ -85,15 +87,16 @@ var reexport = async(record, servers) => {
         formData[30]["custom_id"] = $("#fieldset-hiddenItems input").val();
       }
     }
+    console.log(formData);
     await nextapp.sendForm("https://nextapp.cz/listing/"+record.realID+"/edit/exports", {"service":formData});
     resolve();
   });
 }
 
-ExportQueueItem.reexportAll = (records, servers, obj) => {
+ExportQueueItem.startjobAll = (records, servers, export_action, obj) => {
   return new Promise( async (resolve, reject) => {
     for(var i=0; i<records.length; i++) {
-      await reexport(records[i], servers);
+      await startjob(records[i], servers, export_action);
       ExportQueueItem.findByIdAndUpdate(records[i]._id, {exported: true, dateOfExport: Date.now()}, (err, docs) => {
         if(err) {
           reject("Can not update the document");
@@ -105,9 +108,9 @@ ExportQueueItem.reexportAll = (records, servers, obj) => {
   });
 }
 
-ExportQueueItem.scrapeAndSave = async (lock) => {
+ExportQueueItem.scrapeAndSave = async (lock, customFilter) => {
   return new Promise((resolve, reject) => {
-    ExportQueueItem.scrapeExportPages(lock)
+    ExportQueueItem.scrapeExportPages(lock, customFilter)
     .then(async (table) => {
       return ExportQueueItem.saveTable(table)
     }).then((log) => {
@@ -118,20 +121,24 @@ ExportQueueItem.scrapeAndSave = async (lock) => {
   });
 }
 
-ExportQueueItem.scrapeExportPages = async (lock) => {
+ExportQueueItem.scrapeExportPages = async (lock, customFilter) => {
   return new Promise((resolve, reject) => {
     var baseUrl = 'https://nextapp.cz/export/overview?exportListFilter[export_branch][value]=0&exportListFilter[export_team][value]=0&exportListFilter[export_broker][value]=0&exportListFilter[export_request][values][0]=10&exportListFilter[export_request][values][1]=15&exportListFilter[export_result][values][0]=0&exportListFilter[export_result][values][1]=10&exportListFilter[export_result][values][2]=20&exportListFilter[export_advert_status][values][0]=20&exportListFilter[export_type][values][0]=550&exportListFilter[export_type][values][1]=50&exportListFilter[export_type][values][2]=120&exportListFilter[export_type][values][3]=255&exportListFilter[export_type][values][4]=620&exportListFilter[export_type][values][5]=30&exportListFilter[export_type][values][6]=110&exportListFilter[export_type][values][7]=261&exportListFilter[export_type][values][8]=1&exportListFilter[export_type][values][9]=350&exportListFilter[export_type][values][10]=570&exportListFilter[export_type][values][11]=560&exportListFilter[export_type][values][12]=160&exportListFilter[export_type][values][13]=280&exportListFilter[export_type][values][14]=240&exportListFilter[export_type][values][15]=270&exportListFilter[export_type][values][16]=3002&exportListFilter[export_type][values][17]=170&exportListFilter[export_type][values][18]=150&exportListFilter[export_type][values][19]=600&exportListFilter[export_type][values][20]=250&exportListFilter[export_type][values][21]=180&exportListFilter[export_type][values][22]=10&exportListFilter[export_type][values][23]=11&exportListFilter[export_type][values][24]=220&exportListFilter[export_type][values][25]=20&exportListFilter[export_type][values][26]=580&exportListFilter[export_type][values][27]=3001&exportListFilter[export_type][values][28]=610&exportListFilter[export_type][values][29]=400&exportListFilter[export_type][values][30]=640';
-
+    if(customFilter != "") {
+      baseUrl = customFilter;
+      baseUrl = baseUrl.replace("&filter_submit=Použít+filtr#","");
+    }
     var data = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'codelist', 'servers.json')));
-    var fnc = (indexCell, input) => {
+    var queryData = qs.parse(baseUrl);
+    var fnc = (columnName, input) => {
       const exportedText = $(input).find("dd:first-child").text().trim();
       const exported = (exportedText == "Exportovat" || exportedText == "Vyexportováno, ověřit");
       const dayOfLastExport = $(input).find("dd:last-child").text().trim();
-      const id = fnc.servers[indexCell-2].id; // servers starts from 3nd column, thats why indexCell is shift by -2
+      const id = fnc.servers[columnName]; // servers starts from 3nd column, thats why indexCell is shift by -2
       return {export:exported,dayOfLastExport,id};
     }
     fnc.servers = data["servers"];
-    var columns = [false,true,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc];
+    var columns = [false,true,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc,fnc];
     nextapp.loadTable(baseUrl, columns, 1, lock)
     .then((table) => {
       resolve(table);
