@@ -16,7 +16,7 @@
     "express": "^4.16.3",
     "express-handlebars": "^3.0.2",
     "hbs": "^4.0.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "mongoose": "^5.4.11",
     "nodemailer": "^6.1.1",
     "qs": "^6.9.1",
